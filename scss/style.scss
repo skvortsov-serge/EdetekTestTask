@@ -1,0 +1,27 @@
+@import 'bootstrap';
+@import 'media';
+
+body {
+	background-color: #ddd;
+}
+
+#add-btn {
+	margin-bottom: 10px;
+}
+
+.form-add {
+	// margin-top: -45px;
+	display: none;
+}
+
+.form-add-department {
+	display: none;
+}
+
+.add-btn {
+	margin-top: 10px;
+}
+
+.heading, .heading1 {
+	display: none;
+}

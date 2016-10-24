@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html lang="ru" class="lt-ie9 lt-ie8 lt-ie7"><![endif]-->
+<!--[if IE 7]><html lang="ru" class="lt-ie9 lt-ie8"><![endif]-->
+<!--[if IE 8]><html lang="ru" class="lt-ie9"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="eng">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8" />
+    <title>TestTask</title>
+    <meta name="description" content="" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="shortcut icon" href="images/data-analysis-symbol.png" /> -->
+    <link rel="stylesheet" href="css/fonts.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="jumbotron">
+        <div class="container">
+            <h1>Edetek TestTask</h1>
+            <p>Browser   based   application   to   display   and   manipulate   departments   and employees.
+            </p>
+            <div class="row">
+                <div class="col-sm-3">
+                	<h3>Departments</h3>
+                    <ul class="list-group" id="departments">
+                        <li class="list-group-item"></li>
+                    </ul>
+                    <button id="add-employee-btn" class="btn btn-info add-btn">Add department</button>
+                    <button id="add-btn" class="btn btn-info add-btn">Add employee</button>
+                    <button id="delete-btn" class="btn btn-danger">Delete department</button>
+                </div>
+                <div class="col-sm-4">
+                	<h3 class="heading">Employees</h3>
+                    <ul class="list-group emloyees-list" id="employees">
+                        <li class="list-group-item "></li>
+                    </ul>
+                    <form class="form-add-department is-showing">
+                        <!-- <button type="button" class="close close-btn"><span>×</span></button> -->
+                        <div class="form-group add-window">
+                            <label>Name</label>
+                            <input type="text" class="form-control name-department" placeholder="Name" required="">
+                        </div>
+                        <div class="form-group add-window">
+                            <label>Description</label>
+                            <input type="text" value="" class="form-control description" placeholder="Description" required="">
+                        </div>
+                        <button type="submit" value="submit" class="btn btn-default create-department-btn">Create</button>
+                        <div class="pointer"></div>
+                    </form>
+                    <form class="form-add is-showing">
+                        <!-- <button type="button" class="close close-btn"><span>×</span></button> -->
+                        <div class="form-group add-window">
+                            <label>Department Id</label>
+                            <select class="form-control departmentOptions">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="form-group add-window">
+                            <label>First Name</label>
+                            <input type="text" class="form-control firstName" placeholder="First Name" required="">
+                        </div>
+                        <div class="form-group add-window">
+                            <label>Last Name</label>
+                            <input type="text" value="" class="form-control lastName" placeholder="Last Name" required="">
+                        </div>
+                        <div class="form-group add-window">
+                            <label>Phone</label>
+                            <input type="phone" class="form-control phone" placeholder="Phone">
+                        </div>
+                        <div class="form-group add-window">
+                            <label>Salary</label>
+                            <input type="number" class="form-control salary" placeholder="Salary">
+                        </div>
+                        <button type="submit" value="submit" class="btn btn-default create-btn">Create</button>
+                        <div class="pointer"></div>
+                    </form>
+                </div>
+                <div class="col-sm-5">
+                	<h3 class="heading1">Description</h3>
+                    <ul class="list-group description-employee" id="description-employee">
+                        <li class="list-group-item "></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
