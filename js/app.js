@@ -115,6 +115,8 @@ $(document).ready(function() {
     $('#departments').on('click', '.list-group-item', function() {
         var idDepartment = $(this).data('departmentid');
         $('.heading').show();
+        $('.form-add-department').hide();
+        $('.form-add').hide();
         getEmployees(idDepartment);
 
     });
@@ -123,6 +125,7 @@ $(document).ready(function() {
 
     $('#departments, #employees').on('click', '.list-group-item', function() {
         $('ul li').removeClass('active');
+        $('.emloyees-list').show();
         if ($(this).hasClass('active')) {
             $(this).removeClass('active');
         } else {
@@ -152,14 +155,14 @@ $(document).ready(function() {
     // --------------------------------------------------------------------
     $('#add-btn').on('click', function() {
         $('.form-add').toggle();
-        $('.emloyees-list').toggle();
+        $('.emloyees-list').hide();
         $('.form-add-department').hide();
     });
 
 
     $('#add-employee-btn').on('click', function() {
         $('.form-add-department').toggle();
-        $('.emloyees-list').toggle();
+        $('.emloyees-list').hide();
         $('.form-add').hide();
     });
 
