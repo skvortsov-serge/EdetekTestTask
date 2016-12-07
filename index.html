@@ -25,7 +25,7 @@
             </p>
             <div class="row">
                 <div class="col-sm-3">
-                	<h3>Departments</h3>
+                    <h3>Departments</h3>
                     <ul class="list-group" id="departments">
                         <li class="list-group-item"></li>
                     </ul>
@@ -34,11 +34,11 @@
                     <button id="delete-btn" class="btn btn-danger">Delete department</button>
                 </div>
                 <div class="col-sm-4">
-                	<h3 class="heading">Employees</h3>
-                    <ul class="list-group emloyees-list" id="employees">
+                    <h3 class="heading" id="heading">Employees</h3>
+                    <ul class="list-group employees-list" id="employees">
                         <li class="list-group-item "></li>
                     </ul>
-                    <form class="form-add-department is-showing">
+                    <form class="form-add is-showing" id="form-add-department">
                         <!-- <button type="button" class="close close-btn"><span>×</span></button> -->
                         <div class="form-group add-window">
                             <label>Name</label>
@@ -51,7 +51,7 @@
                         <button type="submit" value="submit" class="btn btn-default create-department-btn">Create</button>
                         <div class="pointer"></div>
                     </form>
-                    <form class="form-add is-showing">
+                    <form class="form-add is-showing" id="form-add">
                         <!-- <button type="button" class="close close-btn"><span>×</span></button> -->
                         <div class="form-group add-window">
                             <label>Department Id</label>
@@ -80,7 +80,7 @@
                     </form>
                 </div>
                 <div class="col-sm-5">
-                	<h3 class="heading1">Description</h3>
+                    <h3 class="heading1">Description</h3>
                     <ul class="list-group description-employee" id="description-employee">
                         <li class="list-group-item "></li>
                     </ul>
@@ -88,9 +88,10 @@
             </div>
         </div>
     </div>
-    <script src="js/jquery.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <!-- <script src="js/jquery.js"></script> -->
+    <!-- <script src="js/bootstrap.js"></script> -->
     <script src="js/app.js"></script>
 </body>
 
 </html>
+

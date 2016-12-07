@@ -10,15 +10,24 @@ function renderDepartments(departments) {
 
 function updateDepartments(array) {
     var html = renderDepartments(array);
-    $('#departments').html(html);
+    var departments = document.getElementById('departments');
+    departments.innerHTML = html;
 }
 
 function getDepartments() {
-    $.get('http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/').done(function(response) {
-        var departments = JSON.parse(response);
-        updateDepartments(departments);
-        updateDepartmentsOptions(departments)
-    });
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/', true);
+
+    request.onreadystatechange = function() {
+        if (this.readyState === 4) {
+            if (this.status >= 200 && this.status < 400) {
+                var departments = JSON.parse(request.responseText);
+                updateDepartments(departments);
+                updateDepartmentsOptions(departments)
+            }
+        }
+    };
+    request.send();
 }
 
 // Employees
@@ -32,33 +41,37 @@ function renderEmployees(employees) {
 
 function updateEmployees(employees) {
     var html = renderEmployees(employees);
-    $('#employees').html(html);
+    var employees = document.getElementById('employees');
+    employees.innerHTML = html;
 }
 
 function getEmployees(id) {
 
-    $.ajax({
-            type: "GET",
-            url: "http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees",
-            dataType: "json"
-        })
-        .done(function(response) {
-            function idFilter(value) {
-                return value.departmentId == id;
-            };
 
-            var filtered = response.filter(idFilter);
-            updateEmployees(filtered);
-        });
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees');
 
+    request.onreadystatechange = function() {
+        if (this.readyState === 4) {
+            if (this.status >= 200 && this.status < 400) {
+                var employees = JSON.parse(request.responseText);
+
+                function idFilter(value) {
+                    return value.departmentId == id;
+                };
+
+                var filtered = employees.filter(idFilter);
+                updateEmployees(filtered);
+            }
+        }
+    }
+    request.send();
 }
 
 // -----------descriptions of employee----------
 
 function renderEmployeesDescription(employees) {
     var obj = employees[0];
-    // var objLength = Object.keys(obj).length;
-    // console.log(employees[0]);
     var lis = '';
     for (var i in obj) {
         lis += '<li class="list-group-item">' + i + ' : ' + obj[i] + '</li>';
@@ -68,25 +81,30 @@ function renderEmployeesDescription(employees) {
 
 function updateEmployeesDescription(employees) {
     var html = renderEmployeesDescription(employees);
-    $('#description-employee').html(html);
+    var descriptionEmployee = document.getElementById('description-employee');
+    descriptionEmployee.innerHTML = html;
 }
 
 function getEmployeesDescription(id) {
 
-    $.ajax({
-            type: "GET",
-            url: "http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees",
-            dataType: "json"
-        })
-        .done(function(response) {
-            function idFilter(value) {
-                return value.id == id;
-            };
+    var request = new XMLHttpRequest();
+    request.open('GET', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees');
 
-            var filtered = response.filter(idFilter);
-            updateEmployeesDescription(filtered);
-        });
+    request.onreadystatechange = function() {
+        if (this.readyState === 4) {
+            if (this.status >= 200 && this.status < 400) {
+                var employeeDescrp = JSON.parse(request.responseText);
 
+                function idFilter(value) {
+                    return value.id == id;
+                };
+
+                var filtered = employeeDescrp.filter(idFilter);
+                updateEmployeesDescription(filtered);
+            }
+        }
+    }
+    request.send();
 }
 
 
@@ -102,140 +120,187 @@ function renderDepartmentsOptions(departments) {
 
 function updateDepartmentsOptions(departments) {
     var html = renderDepartmentsOptions(departments);
-    $('.departmentOptions').html(html);
+    var departmentOptions = document.getElementsByClassName('departmentOptions');
+    departmentOptions[0].innerHTML = html;
 }
 
 
 
 
-$(document).ready(function() {
 
+document.addEventListener("DOMContentLoaded", function(event) {
     getDepartments();
 
-    $('#departments').on('click', '.list-group-item', function() {
-        var idDepartment = $(this).data('departmentid');
-        $('.heading').show();
-        $('.form-add-department').hide();
-        $('.form-add').hide();
-        getEmployees(idDepartment);
+    var departments = document.getElementById('departments');
+    var departmentsLists = departments.getElementsByTagName('li');
+    departments.addEventListener('click', function(e) {
+        if (e.target && e.target.nodeName == 'LI') {
+            var idDepartment = e.target.getAttribute('data-departmentId');
+            var heading = document.getElementById('heading');
+            heading.style.display = 'block';
+            var departmentForm = document.getElementById('form-add');
+            var employeeForm = document.getElementById('form-add-department');
+            if (!departmentForm.classList.contains('form-add') || !employeeForm.classList.contains('form-add')) {
+                document.getElementById('form-add-department').classList.add('form-add');
+                document.getElementById('form-add').classList.add('form-add');
 
-    });
-
-    $('.list-group-item').hide();
-
-    $('#departments, #employees').on('click', '.list-group-item', function() {
-        $('ul li').removeClass('active');
-        $('.emloyees-list').show();
-        if ($(this).hasClass('active')) {
-            $(this).removeClass('active');
-        } else {
-            $(this).addClass('active');
+            }
+            getEmployees(idDepartment);
         }
     });
 
-    // Delete departments
-    $('#delete-btn').on('click', function() {
-        var activeId = $('.active').data('departmentid');
+    document.getElementById('employees').style.display = 'none';
+    document.getElementById('description-employee').style.display = 'none';
 
-        $.ajax({
-            url: 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/' + activeId + '',
-            type: 'DELETE',
-            success: function(res) {
-                console.log(res);
-            },
-            error: function(error) {
-                console.error(error);
+    var end = null;
+
+    document.getElementById('departments').addEventListener('click', function(e) {
+        var listGroupLi = document.getElementsByTagName('li');
+        var listGroupLiArray = [].slice.call(listGroupLi);
+
+        if (e.target && e.target.nodeName == 'LI') {
+        	if(!end) end = listGroupLiArray.indexOf(e.target);
+
+            if (e.ctrlKey) {
+                e.target.classList.toggle('active');
+            } else if (e.shiftKey) {
+                var start = listGroupLiArray.indexOf(e.target);
+                var slicedArray = listGroupLiArray.slice(Math.min(start, end), Math.max(start, end) + 1);
+                slicedArray.map(function(x) {
+                    x.classList.add('active');
+                });
+            } else {
+                if (!e.target.classList.contains('active')) {
+                    end = listGroupLiArray.indexOf(e.target);
+                    for (i = 0; i < listGroupLi.length; i++) {
+                        listGroupLi[i].classList.remove('active');
+                        e.target.classList.add('active');
+                    }
+                } else {
+                    // end = listGroupLiArray.indexOf(e.target);
+                    for (i = 0; i < listGroupLi.length; i++) {
+                        listGroupLi[i].classList.remove('active');
+                        e.target.classList.add('active');
+                    }
+                }
             }
-        });
-        getDepartments();
+        };
+       end = listGroupLiArray.indexOf(e.target);
+
+        document.getElementById('employees').style.display = 'block';
     });
 
+    // Delete departments
+    document.getElementById('delete-btn').addEventListener('click', function(e) {
+        var activeId = document.getElementsByClassName('active');
+        var activeIdArray = [];
+
+        for (var i = 0; i < activeId.length; i++) {
+            activeIdArray.push(activeId[i].getAttribute('data-departmentId'));
+        }
+        var conformation = confirm('Are you sure that you want to delete ' + activeIdArray.length + ' departments?');
+        if (conformation) {
+            for (var i = 0; i < activeIdArray.length; i++) {
+                var request = new XMLHttpRequest();
+                request.open('DELETE', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/' + activeIdArray[i] + '');
+                request.onload = function() {
+                    if (this.status >= 200 && this.status < 400) {
+                        console.log(this.responseText);
+                    } else {
+                        console.error(error);
+                        return;
+                    }
+                }
+                request.send();
+            }
+            getDepartments();
+        }
+
+    });
 
     // toggle forms
     // --------------------------------------------------------------------
-    $('#add-btn').on('click', function() {
-        $('.form-add').toggle();
-        $('.emloyees-list').hide();
-        $('.form-add-department').hide();
+
+    document.getElementById('add-btn').addEventListener('click', function() {
+        document.getElementById('form-add').classList.toggle('form-add');
+        document.getElementById('form-add-department').classList.add('form-add');
+        document.getElementById('employees').style.display = 'none';
+        document.getElementById('heading').style.display = 'none';
     });
 
-
-    $('#add-employee-btn').on('click', function() {
-        $('.form-add-department').toggle();
-        $('.emloyees-list').hide();
-        $('.form-add').hide();
+    document.getElementById('add-employee-btn').addEventListener('click', function() {
+        document.getElementById('form-add-department').classList.toggle('form-add');
+        document.getElementById('form-add').classList.add('form-add');
+        document.getElementById('employees').style.display = 'none';
+        document.getElementById('heading').style.display = 'none';
     });
+
+    document.getElementById('employees').style.display = 'none';
 
     // ---------------------------------------------------------------------
 
     // ----------Add departments----------
 
-    $('.form-add-department').on('submit', function(event) {
+    document.getElementById('form-add-department').addEventListener('submit', function(event) {
         event.preventDefault();
-        var nameDepartmentVal = $('.name-department').val(),
-            descriptionVal = $('.description').val();
+        var request = new XMLHttpRequest();
 
-        var newDepartment = {
+        var nameDepartmentVal = document.getElementsByClassName('name-department')[0].value;
+        var descriptionVal = document.getElementsByClassName('description')[0].value;
+
+        var newDepartment = JSON.stringify({
             name: nameDepartmentVal,
             description: descriptionVal
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/',
-            data: newDepartment,
-            dataType: 'JSON',
-            success: function(res) {
-                console.log(res);
-            },
-            error: function(error) {
-                console.error(error);
-            }
         });
+
+
+        request.open('POST', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/departments/');
+        request.setRequestHeader('Content-type', 'application/json');
+
+        request.send(newDepartment);
         getDepartments();
     });
 
     // -------------add employee---------------------------------
 
-    $('.form-add').on('submit', function(event) {
+    document.getElementById('form-add').addEventListener('submit', function(event) {
         event.preventDefault();
-        var firstNameVal = $('.firstName').val(),
-            lastNameVal = $('.lastName').val(),
-            phoneVal = $('.phone').val(),
-            salaryVal = $('.salary').val(),
-            departmentIdVal = $('.departmentOptions').val(),
-            departmentNameVal = $('.departmentName').val();
+        var request = new XMLHttpRequest();
 
-        var newEmployee = {
+        var firstNameVal = document.getElementsByClassName('firstName')[0].value,
+            lastNameVal = document.getElementsByClassName('lastName')[0].value,
+            phoneVal = document.getElementsByClassName('phone')[0].value,
+            salaryVal = document.getElementsByClassName('salary')[0].value,
+            departmentIdVal = document.getElementsByClassName('departmentOptions')[0].value;
+        // departmentNameVal = document.getElementsByClassName('departmentName')[0].value;
+
+        var newEmployee = JSON.stringify({
             firstName: firstNameVal,
             lastName: lastNameVal,
             phone: phoneVal,
             salary: salaryVal,
             departmentId: departmentIdVal
-        };
-        console.log(newEmployee);
-
-        $.ajax({
-            type: 'POST',
-            url: 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees/',
-            data: newEmployee,
-            dataType: 'JSON',
-            success: function(res) {
-                console.log(res);
-            },
-            error: function(error) {
-                console.error(error);
-            }
         });
+
+        request.open('POST', 'http://ebsexpress-env.us-west-2.elasticbeanstalk.com/users/employees/');
+        request.setRequestHeader('Content-type', 'application/json');
+        request.send(newEmployee);
+
     });
 
-    $('#employees').on('click', '.list-group-item', function() {
-        var idEmployee = $(this).data('id');
-        $('.heading1, .description-employee').show();
+    document.getElementById('employees').addEventListener('click', function(e) {
+        if (e.target && e.target.nodeName == 'LI') {
+            var idEmployee = e.target.getAttribute('data-id');
+            document.getElementsByClassName('heading1')[0].style.display = 'block';
+            document.getElementsByClassName('description-employee')[0].style.display = 'block';
 
-        $('#departments').on('click', '.list-group-item', function() {
-            $('.heading1, .description-employee').hide();
-        });
+            document.getElementById('departments').addEventListener('click', function() {
+                document.getElementsByClassName('heading1')[0].style.display = 'none';
+                document.getElementsByClassName('description-employee')[0].style.display = 'none';
+            });
+        }
         getEmployeesDescription(idEmployee);
     });
+
+
 });
